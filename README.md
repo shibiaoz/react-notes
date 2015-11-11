@@ -6,6 +6,6 @@
 
 
 ## 参考链接
-[react 中文](http://reactjs.cn/react/index.html)
-[react tutorial](https://hulufei.gitbooks.io/react-tutorial/content/introduction.html)
-[阮一峰](http://www.ruanyifeng.com/blog/2015/03/react.html)
+- [react 中文](http://reactjs.cn/react/index.html)
+- [react tutorial](https://hulufei.gitbooks.io/react-tutorial/content/introduction.html)
+- [阮一峰](http://www.ruanyifeng.com/blog/2015/03/react.html)
