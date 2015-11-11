@@ -1,0 +1,28 @@
+{
+  "name": "comment-demo",
+  "version": "0.0.0",
+  "homepage": "https://github.com/shibiaoz/react-notes",
+  "authors": [
+    "shibiaoz <shibiaoz@sina.cn>"
+  ],
+  "description": "study react notes",
+  "main": "index.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Browser": "browser.js#~0.1.2",
+    "react": "~0.14.2"
+  }
+}
