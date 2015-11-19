@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>teset</title>
+    <title>hell world</title>
+    <script  src="bower_components/react/react.js"></script>
+    <script  src="bower_components/react/react-dom.js"></script>
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <!--
+       我操，我用bower 安装的这个babel转换器有问题啊，
+       之前我还以为是是react 和react-dom 版本的问题呢
+       妈蛋的，bower install browser并不是转换器,
+    -->
+</head>
+<body>
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+    var MyComponent = React.createClass({
+      render: function() {
+        return <div>Hello World</div>;
+      }
+    });
+    /**
+     *  React.render is deprecated
+     *  好奇怪，react-dom  并不是必须的
+     *  即使不引入用react.render也能渲染出来
+     *  不过报错，提示react.render 是废弃的
+     *  要用ReactDOM.render代替，不过不引入
+     *  react-dom其实还没有ReactDOM这个对象呢
+     *
+     *
+     */
+ReactDOM.render(<MyComponent />, document.getElementById('example'));
+// ReactDOM.render(<MyComponent />, node);
+//       ReactDOM.render(
+//         <h1>Hello, world!</h1>,
+//         document.getElementById('example')
+//       );
+    </script>
+  </body>
+</html>

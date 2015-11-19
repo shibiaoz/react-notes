@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>hell world</title>
+    <meta charset="utf-8">
+    <script  src="../../react-demos/build/react.js"></script>
+    <script  src="../../react-demos/build/react-dom.js"></script>
+    <script  src="../../react-demos/build/browser.min.js"></script>
+    <script  src="../../react-demos/build/jquery.min.js"></script>
+    <script src="./marked.js"></script>
+    <style type="text/css">
+        .component-box {
+            border: dashed 1px #f0f0f0;
+            padding: 10px;
+        }
+        .component-list {
+            border: solid 1px green;
+            min-height: 100px;
+        }
+        .component-form {
+            min-height: 80px;
+            border: dashed 1px blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="component-box-container"></div>
+    <script type="text/babel">
+        /**
+         * - ComponentBox
+         *  - ComponentList
+         *     - Comment
+         *  - ComponentForm
+         *
+         *
+         */
+
+        /**
+         *
+         * 评论组件
+         *
+         * 父组件
+         *
+         * 最外层的组件
+         */
+        var ComponentBox = React.createClass({
+            /**
+             * 提交信息到服务器，然后更改state的数据值
+             * 更改数据值然后自动刷新UI
+             *
+             * 这里简单模拟下
+             *  这里座位一个桥梁，子组件 与 父组件的桥梁
+             *  子组件与UI数据的桥梁
+             */
+            onCommentFormSubmit: function  () {
+                var data = this.state.data.splice(0);
+                data.push(
+                    {
+                        author: '雨还珠',
+                        text: '> This is 雨还珠'
+                    }
+                );
+                this.setState({
+                    data: data
+                });
+            },
+
+            getInitialState: function  () {
+                return {
+                    data: []
+                };
+            },
+
+            /**
+             * componentDidMount 是一个组件渲染的时候被 React
+             * 自动调用的方法。动态更新界面的关键点就是调用 this.setState()
+             *
+             */
+            componentDidMount: function  () {
+                $.ajax({
+                    type:'GET',
+                    url: this.props.url,
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data) {
+                        // 这里想测试下，如果改变state的值，
+                        // UI会自动更新
+
+                        setTimeout(function  () {
+                            var obj = data;
+                            obj.push(
+                                {
+                                    author: 'shibiao',
+                                    text: '> This is one `comment`'
+                                }
+                            );
+                            this.setState(obj);
+                        }.bind(this),5000);
+
+                        this.setState({data: data});
+                    }.bind(this),
+                    error: function(xhr, status, err) {
+                        console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                });
+            },
+            render: function  () {
+                return (
+                    <div className="component-box">
+                        <h1>ComponentBox</h1>
+                        <ComponentList data={this.state.data}/>
+                        <ComponentForm onCommentFormSubmit={this.onCommentFormSubmit}/>
+                    </div>
+                );
+            }
+        });
+
+        /**
+         * 列表组件
+         *
+         */
+
+        var ComponentList = React.createClass({
+            render: function  () {
+                //  这里必须加个key 来唯一标识这个组件，
+                //  否则报个array unique 的错误
+
+                var commentNodes = this.props.data.map(function (comment, i) {
+                    return (<Comment author={comment.author} key={i}>{comment.text}</Comment>);
+                });
+                return (
+                    <div className="component-list">
+                        {commentNodes}
+                    </div>
+                );
+            }
+        });
+
+        /**
+         * 评论项组件
+         */
+
+        var Comment = React.createClass({
+            /**
+             * markdown 使用
+             * 直接使用由于markdown 防范xss ,不会被浏览器解析
+             *
+             */
+
+            rawMarkup: function() {
+                var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+                return { __html: rawMarkup };
+            },
+
+            render: function  () {
+                return (
+                    <div className="component">
+                        <h2>{this.props.author}</h2>
+                        <span dangerouslySetInnerHTML={this.rawMarkup()} />
+                    </div>
+                );
+            }
+        });
+
+        /**
+         * 评论提交
+         */
+
+        var ComponentForm = React.createClass({
+            /**
+             * 模拟异步提交
+             */
+            handleSubmit: function  (e) {
+                e.preventDefault();
+                var author = this.refs.author.value.trim();
+                var content = this.refs.text.value.trim();
+                if (!author || !content) {
+                    return;
+                }
+                setTimeout(function() {
+                    this.refs.author.value = '';
+                    this.refs.text.value = '';
+                    this.props.onCommentFormSubmit();
+                }.bind(this), 1000);
+                return false;
+            },
+            render: function  () {
+                return (
+                    <div className="component-form">
+                        <form className="commentForm" onSubmit={this.handleSubmit}>
+                            <input type="text" placeholder="用户名" ref="author" />
+                            <input type="text" placeholder="评论内容" ref="text" />
+                            <input type="submit" value="Post" />
+                        </form>
+                    </div>
+                );
+            }
+        });
+
+        ReactDOM.render(
+            <ComponentBox url="./config/data.json"/>,
+            document.getElementById('component-box-container'));
+    </script>
+</body>
+</html>
