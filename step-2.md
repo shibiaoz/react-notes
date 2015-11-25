@@ -50,3 +50,29 @@ ref 属性给子组件命名，通过 this.refs 引用 DOM
 <input type="text" ref="text"/>
 this.refs.text.value;
 ```
+
+## this.props 是只读的
+
+
+## HTML 实体
+默认都是转义的
+万不得已，可以直接使用原始 HTML。
+```<div dangerouslySetInnerHTML={{__html: 'First &middot; Second'}} />```
+
+## 数据流
+
+
+## 默认 Prop 值
+
+
+```
+var ComponentWithDefaultProps = React.createClass({
+  getDefaultProps: function() {
+    return {
+      value: 'default value'
+    };
+  }
+  /* ... */
+});
+```
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>hello jsx</title>
+    <script  src="../../react-demos/build/react.js"></script>
+    <script  src="../../react-demos/build/react-dom.js"></script>
+    <script  src="../../react-demos/build/browser.min.js"></script>
+</head>
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+      var Component = React.createClass({
+        render: function  () {
+            return (
+                <div>123s</div>
+            );
+        }
+      })
+      var props = { foo: 'default' };
+      var component = <Component {...props} foo={'override'} />;
+      console.log(component.props.foo); // 'override'
+
+
+
+      /**
+       * props
+       */
+
+      var CheckLink = React.createClass({
+      render: function() {
+        // 这样会把 CheckList 所有的 props 复制到 <a>
+        return <a {...this.props}>{'√ '}{this.props.children}</a>;
+      }
+    });
+
+
+      ReactDOM.render(
+         <CheckLink href="/checked.html" test="sdf" extendName="sdf">
+            Click here!
+          </CheckLink>,
+        document.getElementById('example')
+      );
+    </script>
+</body>
+</html>
