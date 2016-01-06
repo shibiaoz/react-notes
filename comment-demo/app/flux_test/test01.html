@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <script  src="../../../react-demos/build/react.js"></script>
+    <script  src="../../../react-demos/build/react-dom.js"></script>
+    <script  src="../../../react-demos/build/browser.min.js"></script>
+    <script  src="../bower_components/reflux/dist/reflux.js"></script>
+</head>
+<body>
+    <div id="example"></div>
+    <script type="text/babel">
+
+        var TodoActions = Reflux.createActions([
+            'addItem',
+            'deleteItem'
+        ]);
+        var _items = ['hello '];
+        var TodoStore = Reflux.createStore({
+            _items:[],
+            init: function () {
+                console.log('TodoStore init....');
+                this.listenTo(TodoActions.addItem, 'addItem');
+                this.listenTo(TodoActions.deleteItem, 'deleteItem');
+            },
+            addItem: function (model) {
+               console.log('function addItem...')
+               this._items.push(model);
+               console.log('addItem', _items,'==>'+model);
+               // 广播出去数据
+               this.trigger(this._items);
+            },
+            deleteItem:function(model){
+                console.log(model);
+            },
+            getItems: function  () {
+                console.log('function getItems...')
+                console.log('getItems', this._items);
+                return this._items;
+            }
+        });
+
+         // TodoActions.addItem(' Reflux');
+         // TodoStore.getItems();
+
+         // alert(1);
+        // TodoActions.deleteItem({name:'yyy'});
+
+        var TodoComponent = React.createClass({
+            getInitialState: function  () {
+                var items = TodoStore.getItems();
+                console.log('getInitialState',items);
+                return {
+                    list:items
+                };
+            },
+            componentWillMount: function  () {
+                console.log('componentWillmount');
+            },
+            render: function () {
+                console.log('render',this.state.list);
+               return (
+                    <div>
+                        <span onClick={this.add}>Click Me to Add</span>
+                        <div>
+                            {this.state.list}
+                        </div>
+                    </div>
+                );
+            },
+            add: function  () {
+                TodoActions.addItem(' 哈-- ');
+            },
+            componentDidMount: function  () {
+                console.log('componentDidMount');
+                this.unsubscribe = TodoStore.listen(this.onChange);
+            },
+            componentWillUnmount: function() {
+                    // this.unsubscribe() 用来移除监听器。
+                    this.unsubscribe();
+            },
+            onChange: function  (items) {
+                this.setState({
+                     list:items
+                 });
+            }
+        });
+          ReactDOM.render(
+            <TodoComponent/>,
+            document.getElementById('example')
+          );
+    </script>
+</body>
+</html>

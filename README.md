@@ -10,3 +10,7 @@
 - [react tutorial](https://hulufei.gitbooks.io/react-tutorial/content/introduction.html)
 - [阮一峰](http://www.ruanyifeng.com/blog/2015/03/react.html)
 - [react flux](http://www.cnblogs.com/E-WALKER/p/4781819.html)
+- [Reflux](http://www.jcodecraeer.com/a/javascript/2015/0311/2581.html)
+- [Reflux](http://segmentfault.com/a/1190000002793786?utm_source=tuicool)
+- [Reflux 使用经验](http://react.nodejs-china.org/t/flux/615/3)
+- [Reflux 进化日记](http://react.nodejs-china.org/t/reflux/1032)

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Todo App</title>
+    <script  src="../react-demos/build/react.js"></script>
+    <script  src="../react-demos/build/react-dom.js"></script>
+    <script  src="../react-demos/build/browser.min.js"></script>
+</head>
+<body>
+
+<div id="example"></div>
+<script type="text/babel">
+    var TodoList = React.createClass({
+        render: function  () {
+            /**
+             * key的作用
+             *
+             * Warning: Each child in an array or iterator
+             * should have a unique "key" prop. Check the render method of `TodoList`.
+             */
+            var renderItem = function  (item, index) {
+                return <li key={index}>{item}</li>
+            };
+            return (
+                <ul>
+                    {this.props.items.map(renderItem)}
+                </ul>
+            );
+        }
+    });
+    var TodoApp = React.createClass({
+        getInitialState: function  () {
+            return {
+                items:[],
+                text: '',
+            };
+        },
+        /**
+         * input 的onchange 事件
+         */
+        onChange: function  (e) {
+            this.setState({
+                text: e.target.value
+            });
+        },
+        /**
+         * 表单提交事件
+         */
+        formSubmit: function (e) {
+            e.preventDefault();
+            var nextText = this.state.text;
+            var items = this.state.items.concat([nextText]);
+            this.setState({
+                items: items,
+                text: ''
+            });
+        },
+        render: function  () {
+            return (
+                <div>
+                    <h5>Todo App</h5>
+                    <TodoList items={this.state.items}/>
+                    <form onSubmit={this.formSubmit}>
+                        <input onChange={this.onChange} value={this.state.text}/>
+                        <button type="button">add{this.state.items.length + 1}</button>
+                    </form>
+                </div>
+            );
+        }
+    });
+
+    ReactDOM.render(<TodoApp/>, document.getElementById('example'));
+</script>
+</body>
+</html>
