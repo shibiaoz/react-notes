@@ -4,31 +4,39 @@
     <meta charset="utf-8">
     <title>Todo App</title>
     <script  src="../react-demos/build/react.js"></script>
+    <script src="./react-with-addons-0.14.5.js"></script>
     <script  src="../react-demos/build/react-dom.js"></script>
     <script  src="../react-demos/build/browser.min.js"></script>
+    <style type="text/css">
+        .EventExample-enter {
+          opacity: 0.09;
+          background-color: red;
+          transition: opacity .5s ease-in;
+        }
+        .EventExample-appear {
+          opacity: 0.8;
+          background-color: red;
+          transition: opacity 5s ease-in;
+        }
+        .EventExample-appear-active {
+            background-color: gray;
+        }
+        .EventExample-enter-active {
+             background-color: yellow;
+        }
+        .EventExample-leave {
+          opacity: 1;
+          background-color: blue;
+          transition: opacity 5s ease-in;
+        }
+    </style>
 </head>
 <body>
 
 <div id="example"></div>
 <script type="text/babel">
-    var TodoList = React.createClass({
-        render: function  () {
-            /**
-             * key的作用
-             *
-             * Warning: Each child in an array or iterator
-             * should have a unique "key" prop. Check the render method of `TodoList`.
-             */
-            var renderItem = function  (item, index) {
-                return <li key={index}>{item}</li>
-            };
-            return (
-                <ul>
-                    {this.props.items.map(renderItem)}
-                </ul>
-            );
-        }
-    });
+    var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+    // var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
     var TodoApp = React.createClass({
         getInitialState: function  () {
             return {
@@ -56,11 +64,22 @@
                 text: ''
             });
         },
+
+        /**
+         * 删除一项
+         */
+        delItem: function (index) {
+            var items = this.state.items;
+            items.splice(index,1);
+            this.setState({
+                items: items
+            });
+        },
         render: function  () {
             return (
                 <div>
                     <h5>Todo App</h5>
-                    <TodoList items={this.state.items}/>
+                    <TodoList items={this.state.items} delop={this.delItem}/>
                     <form onSubmit={this.formSubmit}>
                         <input onChange={this.onChange} value={this.state.text}/>
                         <button type="button">add{this.state.items.length + 1}</button>
@@ -70,6 +89,45 @@
         }
     });
 
+    var Todo = React.createClass({
+        render: function () {
+            return (<ReactCSSTransitionGroup
+                    transitionAppear={true}
+                    transitionEnterTimeout={100}
+                    transitionLeaveTimeout={100}
+                    transitionAppearTimeout={100}
+                    transitionName="EventExample">
+                        <li onClick={this.props.delop}>
+                            {this.props.item}
+                        </li>
+                    </ReactCSSTransitionGroup>
+                    );
+        }
+    });
+    var TodoList = React.createClass({
+        render: function  () {
+            /**
+             * key的作用
+             *
+             * Warning: Each child in an array or iterator
+             * should have a unique "key" prop. Check the render method of `TodoList`.
+             */
+            var that = this;
+            return (
+                    <ul>
+                        {that.props.items.map(function (item, index) {
+                            return (
+                                <Todo index={index} key={index}
+                                    item={item}
+                                    delop={that.props.delop.bind(null, index)}>
+                                        {item}
+                                </Todo>
+                            );
+                        }, this)}
+                    </ul>
+            );
+        }
+    });
     ReactDOM.render(<TodoApp/>, document.getElementById('example'));
 </script>
 </body>
